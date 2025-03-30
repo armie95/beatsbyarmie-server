@@ -7,9 +7,12 @@ const path = require("path");
 dotenv.config();
 const app = express();
 
-// ✅ Updated CORS configuration
+// ✅ CORS config: allow both local dev + deployed frontend
 const corsOptions = {
-  origin: "https://beatsbyarmie-client.onrender.com", // Frontend domain
+  origin: [
+    "https://beatsbyarmie-client.onrender.com",
+    "http://localhost:5173",
+  ],
   methods: ["GET", "POST"],
   allowedHeaders: ["Content-Type"],
 };
@@ -18,20 +21,20 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.static("assets"));
 
-// Data
+// Load playlist data
 const playlist = require("./data/playlists.js");
 
-// Test route
+// 🔥 Test route
 app.get("/", (req, res) => {
   res.send("<h1>BeatsByArmie Backend is Running</h1>");
 });
 
-// Get all playlists
+// 🎧 All playlists
 app.get("/fullPlaylist", (req, res) => {
   res.status(200).json(playlist);
 });
 
-// Get songs by playlist ID
+// 🎶 Songs by playlist ID
 app.get("/playlistSongs/:id", (req, res) => {
   const playlistId = parseInt(req.params.id);
 
@@ -49,7 +52,7 @@ app.get("/playlistSongs/:id", (req, res) => {
   res.status(200).json({ songs: findSongs, playlist: findPlaylist });
 });
 
-// Add a comment to a playlist
+// 💬 Add comment
 app.post("/addComment", (req, res) => {
   const { comment, playlistId } = req.body;
 
@@ -64,7 +67,7 @@ app.post("/addComment", (req, res) => {
 
   const newComment = {
     id: Date.now(),
-    name: "John Wick",
+    name: "John Wick", // You can change this to accept dynamic names
     timestamp: Date.now(),
     comment,
   };
@@ -79,7 +82,7 @@ app.post("/addComment", (req, res) => {
   res.status(200).json({ playlist: playlist[index], songs: playlistSongs });
 });
 
-// Start server
+// 🚀 Start server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`✅ Server is running at http://localhost:${PORT}`);
