@@ -7,8 +7,14 @@ const path = require("path");
 dotenv.config();
 const app = express();
 
-// Middleware
-app.use(cors());
+// ✅ Updated CORS configuration
+const corsOptions = {
+  origin: "https://beatsbyarmie-client.onrender.com", // Frontend domain
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type"],
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.static("assets"));
 
