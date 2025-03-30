@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "startdev": "nodemon server.js"
   },
   "keywords": [],
@@ -23,3 +24,4 @@
     "nodemon": "^3.1.9"
   }
 }
+
