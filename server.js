@@ -7,7 +7,7 @@ const path = require("path");
 dotenv.config();
 const app = express();
 
-// ✅ CORS config: allow both local dev + deployed frontend
+// ✅ CORS config: allow both Render frontend + local dev
 const corsOptions = {
   origin: [
     "https://beatsbyarmie-client.onrender.com",
@@ -19,9 +19,14 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use(express.static("assets"));
+app.use(express.static("assets")); // Serve audio/images from /assets
 
-// Load playlist data
+// ✅ Optional: Health check for Render uptime pings
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
+// ✅ Load in-memory playlist data
 const playlist = require("./data/playlists.js");
 
 // 🔥 Test route
@@ -52,7 +57,7 @@ app.get("/playlistSongs/:id", (req, res) => {
   res.status(200).json({ songs: findSongs, playlist: findPlaylist });
 });
 
-// 💬 Add comment
+// 💬 Add comment to a playlist
 app.post("/addComment", (req, res) => {
   const { comment, playlistId } = req.body;
 
@@ -67,7 +72,7 @@ app.post("/addComment", (req, res) => {
 
   const newComment = {
     id: Date.now(),
-    name: "John Wick", // You can change this to accept dynamic names
+    name: "John Wick", // Can replace with req.body.name in future
     timestamp: Date.now(),
     comment,
   };
